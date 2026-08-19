@@ -1,5 +1,6 @@
 {
   "name": "tanstack_start_ts",
+  "description": "ToolPilot — a polished AI chat agent that answers only by calling tools (Calculator, Weather, Text Utility, Currency) via Google Gemini.",
   "private": true,
   "sideEffects": false,
   "type": "module",
