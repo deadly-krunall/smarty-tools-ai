@@ -38,7 +38,7 @@ function parseExpression(raw: string): { a: number; b: number; operation: CalcOp
     .replace(/[, ]/g, "")
     .match(/^(-?\d+(?:\.\d+)?)([+\-*x×/÷])(-?\d+(?:\.\d+)?)$/i);
   if (!match) return null;
-  const operation = SYMBOL_TO_OP[match[2].toLowerCase()];
+  const operation = SYMBOL_TO_OP[(match[2] ?? "").toLowerCase()];
   if (!operation) return null;
   return { a: Number(match[1]), b: Number(match[3]), operation };
 }
@@ -58,7 +58,8 @@ export function runCalculator(input: CalculatorInput): string {
     }
   }
 
-  if (SYMBOL_TO_OP[operation]) operation = SYMBOL_TO_OP[operation];
+  const symbolOp = SYMBOL_TO_OP[operation];
+  if (symbolOp) operation = symbolOp;
 
   if (a === null || b === null) {
     return "Error: I could not read two valid numbers from that request. Please give a simple calculation such as 25 * 16.";
