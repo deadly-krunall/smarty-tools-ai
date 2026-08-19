@@ -1,7 +1,26 @@
 [install]
+# Save a human-readable text lockfile (`bun.lock`) instead of the binary lockfile.
+# Text lockfiles are easier to diff, review, and merge.
 saveTextLockfile = true
-# 24h supply-chain guard: skip package versions published less than a day ago.
-minimumReleaseAge = 86400
-# Each entry bypasses the 24h guard for one package — confirm with the user
-# before adding any.
-minimumReleaseAgeExcludes = ["@lovable.dev/vite-tanstack-config", "@lovable.dev/mcp-js", "@lovable.dev/email-js", "@lovable.dev/webhooks-js"]
+
+# 24-hour supply-chain guard: skip package versions published less than a day ago.
+# This reduces the chance of pulling in a compromised or freshly-broken release.
+minimumReleaseAge = "86400s"
+
+# Lovable-managed packages are released often and trusted; bypass the 24h guard.
+# Confirm with the user before adding any other package here.
+minimumReleaseAgeExcludes = [
+  "@lovable.dev/vite-tanstack-config",
+  "@lovable.dev/mcp-js",
+  "@lovable.dev/email-js",
+  "@lovable.dev/webhooks-js",
+]
+
+[run]
+# Bun defaults are fine; keep this section for explicit overrides if needed.
+# For example: `bun run build` uses Vite, which is configured in vite.config.ts.
+
+[test]
+# Test runner defaults; no custom preload required.
+
+# [build] section is intentionally omitted — Vite owns the build pipeline.
