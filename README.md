@@ -1,29 +1,99 @@
-# Welcome to your Lovable project
+# ToolPilot — Gemini Tool-Calling AI Agent
 
-This project was built with [Lovable](https://lovable.dev).
+A polished single-page AI agent that answers questions **only by calling tools**. Google Gemini
+decides which tool fits the request, the app executes the tool, and Gemini turns the tool result
+into a clear, friendly answer.
 
-## Build with Lovable
+## Features
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+- One agent, four independent tools (agent logic and tool logic are fully separated)
+- Visible tool indicator above every answer (🔧 / 🌤️ / 📝 / 💱)
+- Expandable raw tool input/output for live demos
+- Loading states, clear-conversation button, responsive modern UI
+- Friendly, non-technical error messages — the app never crashes
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+## Tools available
 
-## Development
+| Tool | Icon | Powered by | Capabilities |
+| --- | --- | --- | --- |
+| Calculator | 🔧 | Local logic | add, subtract, multiply, divide; safe division-by-zero handling |
+| Weather | 🌤️ | Open-Meteo (no key) | temperature, conditions, wind speed; city → coordinates (incl. Ratnagiri) |
+| Text Utility | 📝 | Local logic | word count, character count (with/without spaces), reverse text |
+| Currency Converter | 💱 | Frankfurter (no key) | live conversion between 3-letter currency codes |
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+## How the AI agent works
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+1. The user message plus the four function declarations are sent to Gemini.
+2. Gemini responds with a **tool call** (name + JSON arguments) instead of an answer.
+3. The app executes the tool locally or against a public API.
+4. The tool result is sent back to Gemini as a `tool` message.
+5. Gemini writes the final user-facing answer, which is rendered with the tool badge.
+
+```
+User → Gemini (choose tool) → Tool execution → Gemini (final answer) → UI
 ```
 
-## Built with
+Code map:
 
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
+```
+src/
+  agent/          # system prompt, tool declarations, agent loop
+  tools/
+    calculator/   # local math
+    weather/      # Open-Meteo
+    textUtility/  # local text helpers
+    currency/     # Frankfurter
+  components/     # chat UI
+  services/       # Gemini API client (server-only)
+  lib/            # server function bridging UI ↔ agent
+```
+
+## Setup
+
+```bash
+bun install    # or: npm install
+```
+
+### Setting GEMINI_API_KEY
+
+1. Create a key at https://aistudio.google.com/apikey
+2. Copy `.env.example` to `.env`
+3. Fill it in:
+
+```
+GEMINI_API_KEY=your_key_here
+```
+
+The key is read **only on the server** (`process.env.GEMINI_API_KEY`) and is never sent to the
+browser. Never commit a real key. If the app is hosted on Lovable, the built-in Lovable AI gateway
+is used automatically when `GEMINI_API_KEY` is not set, so the demo always runs.
+
+## Run the project
+
+```bash
+bun run dev      # http://localhost:8080
+bun run build    # production build
+```
+
+## Example prompts
+
+| Tool | Prompt |
+| --- | --- |
+| Calculator | `What is 25 × 16?` |
+| Calculator (edge case) | `Divide 10 by 0` |
+| Weather | `What's the weather in Ratnagiri?` |
+| Weather (edge case) | `Weather in Zzzyxville` |
+| Text Utility | `Count the words in: Hello, how are you?` |
+| Text Utility | `Reverse the word hackathon` |
+| Currency | `Convert 100 USD to INR` |
+| Currency (edge case) | `Convert 50 ABC to XYZ` |
+
+## Hackathon demo script (2 minutes)
+
+1. Open the app and read the one-line pitch: "the AI never answers these itself — it calls tools."
+2. Click `What is 25 × 16?` → point at the 🔧 Calculator badge, answer 400.
+3. Click `What's the weather in Ratnagiri?` → 🌤️ badge with live temperature and wind.
+4. Click `Count the words in: Hello, how are you?` → 📝 badge, 4 words.
+5. Click `Convert 100 USD to INR` → 💱 badge with live rate.
+6. Finish with `Divide 10 by 0` → "edge case handled" badge and a friendly explanation.
+7. Expand "View raw tool output" once to show the real tool arguments and result.
