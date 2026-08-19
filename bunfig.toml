@@ -5,7 +5,7 @@ saveTextLockfile = true
 
 # 24-hour supply-chain guard: skip package versions published less than a day ago.
 # This reduces the chance of pulling in a compromised or freshly-broken release.
-minimumReleaseAge = "86400s"
+minimumReleaseAge = 86400
 
 # Lovable-managed packages are released often and trusted; bypass the 24h guard.
 # Confirm with the user before adding any other package here.
