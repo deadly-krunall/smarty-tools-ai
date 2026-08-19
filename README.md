@@ -1,8 +1,6 @@
 # ToolPilot — Gemini Tool-Calling AI Agent
 
-A polished single-page AI agent that answers questions **only by calling tools**. Google Gemini
-decides which tool fits the request, the app executes the tool, and Gemini turns the tool result
-into a clear, friendly answer.
+ToolPilot is a production-ready, single-page chat app that demonstrates **real AI tool use**. Ask it to calculate, check the weather, convert currency, or analyze text — and it never answers from memory. Instead, Google Gemini picks the right tool, the app executes it, and Gemini transforms the live result into a clear, friendly response.
 
 ## Features
 
