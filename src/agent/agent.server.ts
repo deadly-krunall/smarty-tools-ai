@@ -17,7 +17,7 @@ Rules:
 export interface AgentTurn {
   answer: string;
   toolName: string | null;
-  toolArgs: Record<string, unknown> | null;
+  toolArgs: string | null;
   toolResult: string | null;
 }
 
@@ -79,7 +79,7 @@ export async function runAgent(userMessage: string, history: HistoryTurn[]): Pro
   return {
     answer: finalAnswer,
     toolName: call.function.name,
-    toolArgs: args,
+    toolArgs: JSON.stringify(args),
     toolResult,
   };
 }
